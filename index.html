@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин в Ковчеге</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="white"/><rect x="0" y="0" width="100" height="2" fill="%23e0e0e0"/><rect x="0" y="0" width="2" height="100" fill="%23e0e0e0"/></svg>');
+            background-size: 20px 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Шапка */
+        header {
+            background: white;
+            border-bottom: 3px solid #ff6a00;
+            padding: 20px 0;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .header-content {
+            text-align: center;
+        }
+        
+        h1 {
+            color: #ff6a00;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .address {
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 14px;
+            border-left: 3px solid #ff6a00;
+        }
+        
+        /* Сетка товаров */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255,106,0,0.15);
+            border-color: #ff6a00;
+        }
+        
+        .product-image {
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f9f9f9;
+            border-bottom: 1px solid #eee;
+            padding: 20px;
+        }
+        
+        .product-image img {
+            max-width: 100%;
+            max-height: 140px;
+            object-fit: contain;
+        }
+        
+        .product-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #222;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .product-price {
+            background: #ff6a00;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 16px;
+            display: inline-block;
+            margin: 0 auto 15px;
+        }
+        
+        .product-description {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            flex-grow: 1;
+        }
+        
+        .more-info {
+            background: #f5f5f5;
+            color: #333;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+            transition: all 0.2s;
+            font-weight: bold;
+        }
+        
+        .more-info:hover {
+            background: #ff6a00;
+            color: white;
+            border-color: #ff6a00;
+        }
+        
+        /* Подробная информация о товаре */
+        .product-details {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            display: none;
+            border: 1px solid #eee;
+        }
+        
+        .product-details.active {
+            display: block;
+        }
+        
+        .details-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #ff6a00;
+        }
+        
+        .details-image {
+            width: 80px;
+            height: 80px;
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid #eee;
+        }
+        
+        .details-image img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .details-title {
+            flex-grow: 1;
+        }
+        
+        .details-title h2 {
+            color: #222;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .close-details {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            color: #666;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-details:hover {
+            background: #ff6a00;
+            color: white;
+            border-color: #ff6a00;
+        }
+        
+        /* Подвал */
+        footer {
+            background: white;
+            border-top: 3px solid #ff6a00;
+            padding: 25px 0;
+            margin-top: 40px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+        
+        /* Инструкция */
+        .instructions {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 1px solid #eee;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
+        
+        .instructions h2 {
+            color: #ff6a00;
+            margin-bottom: 15px;
+            font-size: 22px;
+            text-align: center;
+        }
+        
+        .instructions-steps {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 200px;
+            text-align: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 3px solid #ff6a00;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #ff6a00;
+            color: white;
+            border-radius: 50%;
+            line-height: 30px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .products {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .details-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .details-image {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .products {
+                grid-template-columns: 1fr;
+            }
+            
+            .instructions-steps {
+                flex-direction: column;
+            }
+        }
+        
+        /* Стили для деталей товара */
+        .details-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .details-info {
+            padding-right: 20px;
+        }
+        
+        .details-price {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff6a00;
+            margin-bottom: 15px;
+        }
+        
+        .details-description {
+            font-size: 16px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 25px;
+        }
+        
+        .details-location {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid #ff6a00;
+        }
+        
+        @media (max-width: 768px) {
+            .details-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .details-info {
+                padding-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <h1>Магазин в городе Ковчег</h1>
+                <p style="color: #666; margin-bottom: 15px; font-size: 16px;">
+                    Самые дешевые товары на сервере Clorum
+<div class="address" style="display: block;">
+    <p>Адрес магазина: Улица Имени Альтеры дом 3, город Ковчег</p>
+</div>
+<div class="address" style="display: block;">
+    <p>-3043 64 1455 (xyz)</p>
+</div>
+            </div>
+        </div>
+    </header>
+    
+        
+        <section class="products" id="products-container">
+            <!-- Товары будут загружены через JavaScript -->
+        </section>
+        
+        <section class="product-details" id="product-details">
+            <!-- Детальная информация о товаре -->
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p style="margin-bottom: 10px;">Магазин в городе Ковчег</p>
+            <p style="color: #999; font-size: 13px;">© 2025 Магазин Ковчега. Все права защищены.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Данные товаров с иконками
+        const products = [
+            {
+                id: 1,
+                name: "Элитры",
+                price: 30,
+                description: "Элитры - это редкое снаряжение, надеваемое в слот нагрудника. Позволяет игроку парить и планировать в воздухе, открывая совершенно новые возможности для путешествий и исследования мира Майнкрафт. Для полета необходим импульс от запуска фейерверком.",
+                icon: "elytra.png"
+            },
+            {
+                id: 2,
+                name: "Шаблон Шпилька",
+                price: 30,
+                description: "Красивый узор на броне добавляющий силу 1 уровня при нанесении шаблона на 3 элемента брони, а также силу 2 уровня при нанесении шаблона на 4 элемента брони. Идеально подходит для улучшения вашей брони и придания ей уникального вида.",
+                icon: "spire_armor_trim_smithing_template.png"
+            },
+            {
+                id: 3,
+                name: "Панцирь Шалкера",
+                price: 3,
+                description: "Используется для крафта шалкера. Ценный материал, добываемый из шалкеров в Энде. Необходим для создания ящиков шалкеров, которые сохраняют свои предметы даже при разрушении.",
+                icon: "shulker_shell.png"
+            },
+            {
+                id: 4,
+                name: "Фейерверк 1 уровня",
+                price: 2,
+                description: "Используется для полета на элитре. Одноразовый фейерверк, дающий минимальный импульс для полета. Идеален для коротких перелетов и обучения полетам на элитрах.",
+                icon: "firework_rocket.png"
+            },
+            {
+                id: 5,
+                name: "Фейерверк 2 уровня",
+                price: 3,
+                description: "Используется для полета на элитре. Фейерверк среднего уровня, дающий хороший импульс для продолжительного полета. Отличный баланс между стоимостью и эффективностью.",
+                icon: "firework_rocket.png"
+            },
+            {
+                id: 6,
+                name: "Фейерверк 3 уровня",
+                price: 4,
+                description: "Используется для полета на элитре. Мощный фейерверк, дающий максимальный импульс для длительного и быстрого полета. Лучший выбор для дальних путешествий.",
+                icon: "firework_rocket.png"
+            },
+            {
+                id: 7,
+                name: "Зелье исцеления",
+                price: 1,
+                description: "Моментально восстанавливает 4 сердца здоровья. Незаменимый помощник в бою и исследовании опасных территорий. Всегда носите с собой несколько флаконов для экстренных ситуаций.",
+                icon: "poh.png"
+            },
+            {
+                id: 8,
+                name: "Зелье огнестойкости",
+                price: 2,
+                description: "Даёт иммунитет к огню и лаве на 3 минуты. Позволяет безопасно исследовать Нижний мир и лавовые озера. Обязательно для посещения крепостей и руин в Нижнем мире.",
+                icon: "pfr.png"
+            }
+        ];
+        
+        // DOM элементы
+        const productsContainer = document.getElementById('products-container');
+        const productDetails = document.getElementById('product-details');
+        
+        // Функция для создания карточек товаров
+        function renderProducts() {
+            productsContainer.innerHTML = '';
+            
+            products.forEach(product => {
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        <img src="${product.icon}" alt="${product.name}" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGOUY5RjkiLz48cGF0aCBkPSJNNTAuNSAyMUM1MC41IDIxIDU0IDMwLjUgNTcgMzMuNUM2MCAzNi41IDY5IDQwIDY5IDQwTDUwLjUgNTlMMzIgNDBDMzIgNDAgNDEgMzYuNSA0NCAzMy41QzQ3IDMwLjUgNTAuNSAyMSA1MC41IDIxWiIgZmlsbD0iI0ZGOTAwMCIvPjwvc3ZnPg=='">
+                    </div>
+                    <div class="product-content">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">${product.price} алмазов</div>
+                        <div class="product-description">
+                            ${product.description.substring(0, 120)}...
+                        </div>
+                        <button class="more-info" data-id="${product.id}">
+                            Подробнее
+                        </button>
+                    </div>
+                `;
+                
+                productsContainer.appendChild(productCard);
+            });
+            
+            // Добавляем обработчики событий на кнопки
+            document.querySelectorAll('.more-info').forEach(button => {
+                button.addEventListener('click', function() {
+                    const productId = parseInt(this.getAttribute('data-id'));
+                    showProductDetails(productId);
+                });
+            });
+        }
+        
+        // Функция для показа детальной информации о товаре
+        function showProductDetails(productId) {
+            const product = products.find(p => p.id === productId);
+            
+            if (product) {
+                productDetails.innerHTML = `
+                    <div class="details-header">
+                        <div class="details-image">
+                            <img src="${product.icon}" alt="${product.name}" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGOUY5RjkiLz48cGF0aCBkPSJNNTAuNSAyMUM1MC41IDIxIDU0IDMwLjUgNTcgMzMuNUM2MCAzNi41IDY5IDQwIDY5IDQwTDUwLjUgNTlMMzIgNDBDMzIgNDAgNDEgMzYuNSA0NCAzMy41QzQ3IDMwLjUgNTAuNSAyMSA1MC41IDIxWiIgZmlsbD0iI0ZGOTAwMCIvPjwvc3ZnPg=='">
+                        </div>
+                        <div class="details-title">
+                            <h2>${product.name}</h2>
+                            <div style="color: #666; font-size: 16px;">ID товара: #${product.id.toString().padStart(3, '0')}</div>
+                        </div>
+                        <button class="close-details">×</button>
+                    </div>
+                    
+                    <div class="details-content">
+                        <div class="details-info">
+                            <div class="details-price">${product.price} алмазов</div>
+                            <div class="details-description">
+                                ${product.description}
+                            </div>
+                            <div style="background: #f0f0f0; padding: 12px 15px; border-radius: 5px; margin-bottom: 20px; font-size: 14px;">
+                                <strong>Наличие:</strong> <span style="color: #2e7d32; font-weight: bold;">✅ В наличии</span>
+                            </div>
+                        </div>
+                        
+                `;
+                
+                productDetails.classList.add('active');
+                
+                // Прокрутка к деталям товара
+                productDetails.scrollIntoView({ behavior: 'smooth' });
+                
+                // Обработчик закрытия деталей
+                document.querySelector('.close-details').addEventListener('click', () => {
+                    productDetails.classList.remove('active');
+                });
+            }
+        }
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+        });
+    </script>
+</body>
+</html>
