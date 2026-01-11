@@ -75,12 +75,28 @@
             border: 1px solid #eee;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
         
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 20px rgba(255,106,0,0.15);
             border-color: #ff6a00;
+        }
+        
+        /* Красная плашка скидки */
+        .discount-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff0000;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 2;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
         
         .product-image {
@@ -91,6 +107,7 @@
             background: #f9f9f9;
             border-bottom: 1px solid #eee;
             padding: 20px;
+            position: relative;
         }
         
         .product-image img {
@@ -123,6 +140,21 @@
             font-size: 16px;
             display: inline-block;
             margin: 0 auto 15px;
+            text-align: center;
+        }
+        
+        /* Стили для старой цены */
+        .old-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 14px;
+            margin-right: 8px;
+        }
+        
+        .new-price {
+            color: #ff0000;
+            font-weight: bold;
+            font-size: 16px;
         }
         
         .product-description {
@@ -335,6 +367,17 @@
             margin-bottom: 15px;
         }
         
+        /* Стиль для скидки в деталях */
+        .discount-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-left: 4px solid #ff0000;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            color: #856404;
+        }
+        
         .details-description {
             font-size: 16px;
             line-height: 1.7;
@@ -394,12 +437,10 @@
         <div class="container">
             <p style="margin-bottom: 10px;">Магазин в городе Ковчег</p>
             <p style="color: #999; font-size: 13px;">© 2025 Магазин Ковчега. Все права защищены.</p>
-<div style="text-align:center; margin: 20px 0;">
-    <script type="text/javascript" src="https://services.webestools.com/cpt_pages_views/76610-1-1.js"></script>
-    <div style="font-size: 12px; color: #999; margin-top: 5px;">
-        Счётчик посещений
-    </div>
-</div>
+            <div style="margin: 20px auto; max-width: 300px;">
+                <div style="text-align:center;">
+                    <script type="text/javascript" src="https://services.webestools.com/cpt_pages_views/76610-1-1.js"></script>
+                </div>
             </div>
         </div>
     </footer>
@@ -428,65 +469,76 @@
             {
                 id: 1,
                 name: "Элитры",
-                price: 30,
+                price: 25, // Новая цена со скидкой
+                oldPrice: 30, // Старая цена
                 description: "Элитры - это редкое снаряжение, надеваемое в слот нагрудника. Позволяет игроку парить и планировать в воздухе, открывая совершенно новые возможности для путешествий и исследования мира Майнкрафт. Для полета необходим импульс от запуска фейерверком.",
-                icon: "elytra.png"
+                icon: "elytra.png",
+                discount: true, // Есть скидка
+                discountText: "На товар действует скидка 15% для жителей города"
             },
             {
                 id: 2,
                 name: "Шаблон Шпилька",
-                price: 30,
+                price: 25, // Новая цена со скидкой
+                oldPrice: 30, // Старая цена
                 description: "Красивый узор на броне добавляющий силу 1 уровня при нанесении шаблона на 3 элемента брони, а также силу 2 уровня при нанесении шаблона на 4 элемента брони. Идеально подходит для улучшения вашей брони и придания ей уникального вида.",
-                icon: "spire_armor_trim_smithing_template.png"
+                icon: "spire_armor_trim_smithing_template.png",
+                discount: true, // Есть скидка
+                discountText: "На товар действует скидка 15% для жителей города"
             },
             {
                 id: 3,
                 name: "Панцирь Шалкера",
                 price: 3,
+                oldPrice: 3,
                 description: "Используется для крафта шалкера. Ценный материал, добываемый из шалкеров в Энде. Необходим для создания ящиков шалкеров, которые сохраняют свои предметы даже при разрушении.",
-                icon: "shulker_shell.png"
+                icon: "shulker_shell.png",
+                discount: false
             },
             {
                 id: 4,
                 name: "Фейерверк 1 уровня",
                 price: 2,
+                oldPrice: 2,
                 description: "Используется для полета на элитре. Одноразовый фейерверк, дающий минимальный импульс для полета. Идеален для коротких перелетов и обучения полетам на элитрах.",
-                icon: "firework_rocket.png"
+                icon: "firework_rocket.png",
+                discount: false
             },
             {
                 id: 5,
                 name: "Фейерверк 2 уровня",
                 price: 3,
+                oldPrice: 3,
                 description: "Используется для полета на элитре. Фейерверк среднего уровня, дающий хороший импульс для продолжительного полета. Отличный баланс между стоимостью и эффективностью.",
-                icon: "firework_rocket.png"
+                icon: "firework_rocket.png",
+                discount: false
             },
             {
                 id: 6,
                 name: "Фейерверк 3 уровня",
                 price: 4,
+                oldPrice: 4,
                 description: "Используется для полета на элитре. Мощный фейерверк, дающий максимальный импульс для длительного и быстрого полета. Лучший выбор для дальних путешествий.",
-                icon: "firework_rocket.png"
+                icon: "firework_rocket.png",
+                discount: false
             },
             {
                 id: 7,
                 name: "Зелье исцеления",
                 price: 2,
+                oldPrice: 2,
                 description: "Моментально восстанавливает 4 сердца здоровья. Незаменимый помощник в бою и исследовании опасных территорий. Всегда носите с собой несколько флаконов для экстренных ситуаций.",
-                icon: "poh.png"
+                icon: "poh.png",
+                discount: false
             },
             {
                 id: 8,
                 name: "Зелье огнестойкости",
                 price: 3,
+                oldPrice: 3,
                 description: "Даёт иммунитет к огню и лаве на 3 минуты. Позволяет безопасно исследовать Нижний мир и лавовые озера. Обязательно для посещения крепостей и руин в Нижнем мире.",
-                icon: "pfr.png"
-            },
-            {
-                id: 9,
-                name: "Зелье огнестойкости",
-                price: 4,
-                description: "Даёт иммунитет к огню и лаве на 8 минут. Позволяет безопасно исследовать Нижний мир и лавовые озера. Обязательно для посещения крепостей и руин в Нижнем мире.",
-                icon: "pfr.png"
+                icon: "pfr.png",
+                discount: false
             }
         ];
         
@@ -503,13 +555,28 @@
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
                 
+                // HTML для цены (со скидкой или без)
+                let priceHTML;
+                if (product.discount && product.oldPrice > product.price) {
+                    const oldDiamondWord = getDiamondWord(product.oldPrice);
+                    priceHTML = `
+                        <div class="product-price">
+                            <span class="old-price">${product.oldPrice} ${oldDiamondWord}</span>
+                            <span class="new-price">${product.price} ${diamondWord}</span>
+                        </div>
+                    `;
+                } else {
+                    priceHTML = `<div class="product-price">${product.price} ${diamondWord}</div>`;
+                }
+                
                 productCard.innerHTML = `
+                    ${product.discount ? '<div class="discount-badge">Скидка 15%</div>' : ''}
                     <div class="product-image">
                         <img src="${product.icon}" alt="${product.name}" onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiNGOUY5RjkiLz48cGF0aCBkPSJNNTAuNSAyMUM1MC41IDIxIDU0IDMwLjUgNTcgMzMuNUM2MCAzNi41IDY5IDQwIDY5IDQwTDUwLjUgNTlMMzIgNDBDMzIgNDAgNDEgMzYuNSA0NCAzMy41QzQ3IDMwLjUgNTAuNSAyMSA1MC41IDIxWiIgZmlsbD0iI0ZGOTAwMCIvPjwvc3ZnPg=='">
                     </div>
                     <div class="product-content">
                         <div class="product-name">${product.name}</div>
-                        <div class="product-price">${product.price} ${diamondWord}</div>
+                        ${priceHTML}
                         <div class="product-description">
                             ${product.description.substring(0, 120)}...
                         </div>
@@ -538,6 +605,24 @@
             if (product) {
                 const diamondWord = getDiamondWord(product.price);
                 
+                // HTML для цены в деталях
+                let detailsPriceHTML;
+                if (product.discount && product.oldPrice > product.price) {
+                    const oldDiamondWord = getDiamondWord(product.oldPrice);
+                    detailsPriceHTML = `
+                        <div class="details-price">
+                            <span style="text-decoration: line-through; color: #999; font-size: 22px; margin-right: 10px;">
+                                ${product.oldPrice} ${oldDiamondWord}
+                            </span>
+                            <span style="color: #ff0000;">
+                                ${product.price} ${diamondWord}
+                            </span>
+                        </div>
+                    `;
+                } else {
+                    detailsPriceHTML = `<div class="details-price">${product.price} ${diamondWord}</div>`;
+                }
+                
                 productDetails.innerHTML = `
                     <div class="details-header">
                         <div class="details-image">
@@ -552,7 +637,16 @@
                     
                     <div class="details-content">
                         <div class="details-info">
-                            <div class="details-price">${product.price} ${diamondWord}</div>
+                            ${detailsPriceHTML}
+                            
+                            ${product.discount ? 
+                                `<div class="discount-info">
+                                    <strong>🎉 Специальное предложение!</strong><br>
+                                    ${product.discountText}
+                                </div>` 
+                                : ''
+                            }
+                            
                             <div class="details-description">
                                 ${product.description}
                             </div>
@@ -594,7 +688,3 @@
     </script>
 </body>
 </html>
-
-
-
-
