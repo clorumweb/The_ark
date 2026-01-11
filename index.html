@@ -26,21 +26,6 @@
             padding: 20px;
         }
         
-        /* Счётчик посещений */
-        .visitor-counter {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            font-size: 13px;
-            color: #666;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 1px solid #eee;
-            z-index: 1000;
-        }
-        
         /* Шапка */
         header {
             background: white;
@@ -320,13 +305,6 @@
                 margin-right: 0;
                 margin-bottom: 15px;
             }
-            
-            .visitor-counter {
-                bottom: 10px;
-                right: 10px;
-                font-size: 12px;
-                padding: 6px 10px;
-            }
         }
         
         @media (max-width: 480px) {
@@ -398,8 +376,6 @@
             <div class="address">
                 <p style="margin: 0;">-3043 64 1455 (xyz)</p>
             </div>
-
-            </div>
         </div>
     </div>
 </header>
@@ -419,11 +395,12 @@
             <p style="margin-bottom: 10px;">Магазин в городе Ковчег</p>
             <p style="color: #999; font-size: 13px;">© 2025 Магазин Ковчега. Все права защищены.</p>
             <div style="margin: 20px auto; max-width: 300px;">
-            <div style="text-align:center;">
-            <script type="text/javascript" src="https://services.webestools.com/cpt_pages_views/76609-1-5.js"></script>
+                <div style="text-align:center;">
+                    <script type="text/javascript" src="https://services.webestools.com/cpt_pages_views/76609-1-5.js"></script>
+                </div>
+                <a href="https://www.webestools.com/" style="display:block;text-align:center; font-size: 10px; color: #999; text-decoration: none; margin-top: 5px;" title="Посетителей">
+                </a>
             </div>
-            <a href="https://www.webestools.com/" style="display:block;text-align:center; font-size: 10px; color: #999; text-decoration: none; margin-top: 5px;" title="Посетителей">
-            </a>
         </div>
     </footer>
     
@@ -509,19 +486,6 @@
         // DOM элементы
         const productsContainer = document.getElementById('products-container');
         const productDetails = document.getElementById('product-details');
-        const visitorCounter = document.getElementById('visitorCounter');
-        
-        // Счётчик посещений
-        function updateVisitorCounter() {
-            let visits = localStorage.getItem('siteVisits');
-            if (!visits) {
-                visits = 1;
-            } else {
-                visits = parseInt(visits) + 1;
-            }
-            localStorage.setItem('siteVisits', visits);
-            visitorCounter.textContent = `Посетителей: ${visits}`;
-        }
         
         // Функция для создания карточек товаров
         function renderProducts() {
@@ -618,12 +582,8 @@
         
         // Инициализация
         document.addEventListener('DOMContentLoaded', () => {
-            updateVisitorCounter();
             renderProducts();
         });
     </script>
 </body>
 </html>
-
-
-
