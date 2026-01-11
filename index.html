@@ -26,6 +26,21 @@
             padding: 20px;
         }
         
+        /* Счётчик посещений */
+        .visitor-counter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #666;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid #eee;
+            z-index: 1000;
+        }
+        
         /* Шапка */
         header {
             background: white;
@@ -49,9 +64,13 @@
             background: #f9f9f9;
             padding: 10px;
             border-radius: 5px;
-            display: inline-block;
+            display: block;
             font-size: 14px;
             border-left: 3px solid #ff6a00;
+            margin-bottom: 10px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         /* Сетка товаров */
@@ -301,6 +320,13 @@
                 margin-right: 0;
                 margin-bottom: 15px;
             }
+            
+            .visitor-counter {
+                bottom: 10px;
+                right: 10px;
+                font-size: 12px;
+                padding: 6px 10px;
+            }
         }
         
         @media (max-width: 480px) {
@@ -358,23 +384,29 @@
     </style>
 </head>
 <body>
+    <!-- Счётчик посещений -->
+    <div class="visitor-counter" id="visitorCounter">
+        Посетителей: загрузка...
+    </div>
+    
     <header>
         <div class="container">
             <div class="header-content">
                 <h1>Магазин в городе Ковчег</h1>
                 <p style="color: #666; margin-bottom: 15px; font-size: 16px;">
                     Самые дешевые товары на сервере Clorum
-<div class="address" style="display: block;">
-    <p>Адрес магазина: Улица Имени Альтеры дом 3, город Ковчег</p>
-</div>
-<div class="address" style="display: block;">
-    <p>-3043 64 1455 (xyz)</p>
-</div>
+                </p>
+                <div class="address">
+                    <p style="margin: 0;">Адрес магазина: Улица Имени Альтеры дом 3, город Ковчег</p>
+                </div>
+                <div class="address">
+                    <p style="margin: 0;">-3043 64 1455 (xyz)</p>
+                </div>
             </div>
         </div>
     </header>
     
-        
+    <main class="container">
         <section class="products" id="products-container">
             <!-- Товары будут загружены через JavaScript -->
         </section>
@@ -392,6 +424,24 @@
     </footer>
     
     <script>
+        // Функция для правильного окончания слова "алмаз"
+        function getDiamondWord(price) {
+            const lastDigit = price % 10;
+            const lastTwoDigits = price % 100;
+            
+            if (lastTwoDigits >= 11 && lastTwoDigits <= 14) {
+                return "алмазов";
+            }
+            
+            if (lastDigit === 1) {
+                return "алмаз";
+            } else if (lastDigit >= 2 && lastDigit <= 4) {
+                return "алмаза";
+            } else {
+                return "алмазов";
+            }
+        }
+        
         // Данные товаров с иконками
         const products = [
             {
@@ -455,12 +505,26 @@
         // DOM элементы
         const productsContainer = document.getElementById('products-container');
         const productDetails = document.getElementById('product-details');
+        const visitorCounter = document.getElementById('visitorCounter');
+        
+        // Счётчик посещений
+        function updateVisitorCounter() {
+            let visits = localStorage.getItem('siteVisits');
+            if (!visits) {
+                visits = 1;
+            } else {
+                visits = parseInt(visits) + 1;
+            }
+            localStorage.setItem('siteVisits', visits);
+            visitorCounter.textContent = `Посетителей: ${visits}`;
+        }
         
         // Функция для создания карточек товаров
         function renderProducts() {
             productsContainer.innerHTML = '';
             
             products.forEach(product => {
+                const diamondWord = getDiamondWord(product.price);
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
                 
@@ -470,7 +534,7 @@
                     </div>
                     <div class="product-content">
                         <div class="product-name">${product.name}</div>
-                        <div class="product-price">${product.price} алмазов</div>
+                        <div class="product-price">${product.price} ${diamondWord}</div>
                         <div class="product-description">
                             ${product.description.substring(0, 120)}...
                         </div>
@@ -497,6 +561,8 @@
             const product = products.find(p => p.id === productId);
             
             if (product) {
+                const diamondWord = getDiamondWord(product.price);
+                
                 productDetails.innerHTML = `
                     <div class="details-header">
                         <div class="details-image">
@@ -511,7 +577,7 @@
                     
                     <div class="details-content">
                         <div class="details-info">
-                            <div class="details-price">${product.price} алмазов</div>
+                            <div class="details-price">${product.price} ${diamondWord}</div>
                             <div class="details-description">
                                 ${product.description}
                             </div>
@@ -520,6 +586,18 @@
                             </div>
                         </div>
                         
+                        <div class="details-location">
+                            <h3 style="color: #222; margin-bottom: 15px; font-size: 18px;">Как получить товар:</h3>
+                            <p style="margin-bottom: 15px;">1. Подойдите к нашему магазину в игре</p>
+                            <p style="margin-bottom: 15px;">2. Скажите продавцу название товара: <strong>"${product.name}"</strong></p>
+                            <p style="margin-bottom: 20px;">3. Оплатите <strong>${product.price} ${diamondWord}</strong></p>
+                            <div style="background: white; padding: 15px; border-radius: 5px;">
+                                <strong>Адрес магазина:</strong><br>
+                                Улица Имени Альтеры дом 3, город Ковчег<br>
+                                Координаты: -3043 64 1455 (xyz)
+                            </div>
+                        </div>
+                    </div>
                 `;
                 
                 productDetails.classList.add('active');
@@ -536,9 +614,9 @@
         
         // Инициализация
         document.addEventListener('DOMContentLoaded', () => {
+            updateVisitorCounter();
             renderProducts();
         });
     </script>
 </body>
-
 </html>
